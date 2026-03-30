@@ -1,2 +1,3 @@
-# DTI-PID-
-Detección temprana de Incendios
+# PID-Trabajo
+#Deteccion de carriles
+
