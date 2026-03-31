@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{float} % Necesario para el parámetro [H]
+\usepackage[margin=2.5cm]{geometry} % Ajusta los márgenes para que la tabla quepa mejor
+
+\title{Sistema adaptativo de detección de carriles bajo condiciones variables de iluminación}
+\author{Daniel Salamanca Garrido, Hugo Toro Meca, Miguel Garcia Losada}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Resumen}
+Se propone un trabajo dirigido centrado en la detección adaptativa de carriles en secuencias de vídeo capturadas desde un vehículo. El proyecto se apoya en un artículo científico reciente que combina técnicas clásicas de visión por computador para el día con un flujo de procesamiento específico para condiciones nocturnas. Nuestro objetivo es estudiar el método, implementarlo de forma didáctica en Python/OpenCV y evaluar su comportamiento sobre un dataset con escenas diurnas y nocturnas. Como aportación propia, se plantea mejorar la robustez del sistema mediante una decisión de conmutación más estable entre modos y un preprocesado de contraste local para situaciones de iluminación compleja.
+
+\subsection{Idea clave}
+Construir un detector de carriles interpretable, reproducible y visualmente explicable, capaz de alternar entre un pipeline diurno y otro nocturno a partir del brillo medio del fotograma.
+
+\section{Introducción}
+La detección de carriles constituye hoy en día una de las tareas fundamentales y más desafiantes dentro del ámbito de la visión por computador aplicada a la automoción, siendo el pilar de los sistemas avanzados de asistencia a la conducción (ADAS) y el desarrollo de vehículos autónomos. La capacidad de un vehículo para identificar con precisión su posición relativa respecto a la calzada no solo previene accidentes por salidas involuntarias, sino que facilita procesos de navegación complejos en entornos reales. No obstante, el rendimiento de los algoritmos convencionales suele degradarse significativamente ante la variabilidad del entorno externo, donde factores como el resplandor solar, las sombras densas o la escasa visibilidad nocturna introducen ruido y oclusiones que dificultan la detección constante.Para abordar estas limitaciones, el presente trabajo se apoya en la investigación reciente de Abdelfattah et al. (2025), la cual propone un sistema robusto y adaptativo que ajusta su estrategia de procesamiento según las condiciones lumínicas detectadas en tiempo real. El núcleo de este enfoque reside en un clasificador dinámico que, basado en el brillo medio del fotograma, alterna entre un pipeline diurno centrado en el enmascaramiento de regiones de interés (ROI) y promediado de líneas, y un flujo nocturno que emplea la Transformada de Hough Probabilística junto a filtros de Kalman para mantener la trayectoria en condiciones de baja iluminación.Nuestro objetivo principal es la implementación didáctica y reproducible de este método utilizando herramientas como Python y OpenCV, permitiendo desglosar visualmente etapas críticas como el filtrado Gaussiano y la detección de bordes mediante Canny. Como aportación diferencial, el Grupo 9 plantea mejorar la estabilidad del sistema mediante una lógica de conmutación más robusta que evite cambios bruscos de modo y la incorporación de preprocesados de contraste local para optimizar la visibilidad en situaciones de iluminación compleja, como túneles o marcas viales degradadas. De este modo, buscamos construir un detector que sea no solo eficaz, sino también visualmente explicable y resistente ante las exigencias del tráfico moderno.
+\section{Planteamiento Teórico}
+% Contenido pendiente de desarrollo
+
+\section{Implementación}
+% Contenido pendiente de desarrollo
+
+\section{Experimentación}
+% Contenido pendiente de desarrollo
+
+\section{Manual de usuario}
+% Contenido pendiente de desarrollo
+
+\section{Conclusiones}
+% Contenido pendiente de desarrollo
+
+\section{Autoevaluación de cada miembro}
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        & \textbf{Miguel García} & \textbf{Hugo Toro} & \textbf{Daniel Salamanca} \\ \hline
+        Comprensión y dominio        & Excelente & Excelente & Excelente \\ \hline
+        Exposición Didáctica         & Excelente & Excelente & Excelente \\ \hline
+        Integración del Equipo       & Excelente & Excelente & Excelente \\ \hline
+        Objetivos                    & Excelente & Excelente & Excelente \\ \hline
+        Aspectos didácticos          & Excelente & Excelente & Excelente \\ \hline
+        Experimentación y conclusiones & Excelente & Excelente & Excelente \\ \hline
+        Contenidos                   & Excelente & Excelente & Excelente \\ \hline
+        Divulgación de contenidos    & Excelente & Excelente & Excelente \\ \hline
+        Bibliografía                 & Excelente & Excelente & Excelente \\ \hline
+    \end{tabular}
+    \caption{Autoevaluación del equipo}
+    \label{tab:autoevaluacion}
+\end{table}
+
+\section{Tabla de tiempos}
+
+\begin{table}[H] % El parámetro [H] obliga a la tabla a quedarse AQUÍ
+    \centering
+    \small % Reduce un poco la fuente para que el texto extenso no sature la vista
+    \begin{tabular}{|c|c|l|p{8cm}|}
+        \hline
+        \textbf{Fecha} & \textbf{Tiempo (h)} & \textbf{Miembro} & \textbf{Actividad realizada} \\ \hline
+        31/03/2026 & 2,5 & Hugo Toro Meca & \textbf{Coordinación y planificación:} Definición del alcance de la Fase 1, reparto inicial del trabajo y revisión conjunta de la propuesta. \\ \hline
+        31/03/2026 & 3 & Hugo Toro Meca & \textbf{Marco teórico y objetivos:} Redacción de la justificación del proyecto, objetivos generales y organización del enfoque metodológico. \\ \hline
+        31/03/2026 & 2,5 & Hugo Toro Meca & \textbf{Revisión e integración:} Corrección del documento, unificación del estilo y validación final del contenido entregado. \\ \hline
+        31/03/2026 & 3 & Daniel Salamanca & \textbf{Búsqueda bibliográfica:} Localización del artículo base y revisión de material complementario en bases de datos y documentación técnica. \\ \hline
+        31/03/2026 & 3 & Daniel Salamanca & \textbf{Selección del dataset:} Análisis preliminar de secuencias disponibles, criterios de elección y definición de casos de uso para pruebas. \\ \hline
+        31/03/2026 & 2 & Daniel Salamanca & \textbf{Referencias y apoyo teórico:} Organización de la bibliografía inicial y apoyo en la descripción del estado de la cuestión. \\ \hline
+        31/03/2026 & 3 & Miguel García Losada & \textbf{Estructura del documento:} Diseño de apartados, secuencia lógica de la memoria y preparación de la versión base de la Fase 1. \\ \hline
+        31/03/2026 & 2,5 & Miguel García Losada & \textbf{Planteamiento técnico:} Descripción del flujo previsto de implementación y preparación de ejemplos visuales e ideas de evaluación. \\ \hline
+        31/03/2026 & 2,5 & Miguel García Losada & \textbf{Maquetación y revisión final:} Ajustes de formato, comprobación de coherencia interna y preparación de la versión lista para entregar. \\ \hline
+    \end{tabular}
+    \caption{Distribución de tareas y tiempos por miembro del equipo}
+    \label{tab:seguimiento_actividades}
+\end{table}
+
+\section{Bibliografía}
+\nocite{*} 
+\bibliographystyle{IEEEtran}
+\bibliography{referencias}
+
+\end{document}
