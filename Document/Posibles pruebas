@@ -1,0 +1,96 @@
+1. Consistencia Temporal (Stability)
+Esta es la métrica más importante para un vídeo. Si el carril detectado salta bruscamente de un fotograma a otro, el error es alto.
+    • Cómo calcularlo: Comparad la pendiente ($m$) y la intersección ($c$) del fotograma actual con el anterior.
+    • Fórmula:
+      $$\text{Consistencia} = \frac{\text{Nº de fotogramas estables}}{\text{Total de fotogramas}} \text{ [cite: 487]}$$
+    • Si la variación de la pendiente es menor a un umbral (ej. 5%), el fotograma es "consistente".
+
+2. Distancia Inter-carril (Lane Width)
+En una carretera estándar, el ancho del carril es relativamente constante.
+    • Cómo calcularlo: Calculad la distancia euclídea entre la línea izquierda y la derecha en la base de la imagen ($y_{max}$).
+    • Fórmula:
+      $$\text{Distancia} = \sqrt{(x_{der} - x_{izq})^2 + (y_{der} - y_{izq})^2} \text{ [cite: 490]}$$
+    • Si vuestro algoritmo detecta que el carril mide 300 píxeles y de repente pasa a medir 100 o 600, sabéis que hay un error de detección.
+
+3. Tasa de Detección de Líneas (Detection Rate)
+Es una métrica de "todo o nada" muy útil para el modo nocturno.
+    • Cómo calcularlo: Contad en cuántos fotogramas el algoritmo es capaz de encontrar ambas líneas simultáneamente.
+    • Interpretación: En vuestro artículo, el modo día suele tener un 0.81 (81%) y el noche un 0.62 (62%). Si vuestros números son menores, necesitáis ajustar los umbrales de Canny o la Transformada de Hough.
+
+
+
+CODIGO(Debéis instanciar la clase EvaluadorCarriles justo antes de empezar el bucle que recorre las imágenes. Luego, dentro del bucle, llamáis al método registrar_frame pasando los resultados que ya obtenéis de vuestras funciones procesar_dia o procesar_noche.):
+
+import numpy as np
+
+class EvaluadorCarriles:
+    def __init__(self, umbral_consistencia=0.10):
+        self.total_frames = 0
+        self.frames_con_ambas_lineas = 0
+        self.frames_consistentes = 0
+        self.historial_distancias = []
+        
+        # Umbral de cambio máximo (10%) para considerar una línea "estable"
+        self.umbral_consistencia = umbral_consistencia
+        self.ultima_izq = None # (m, c)
+        self.ultima_der = None # (m, c)
+
+    def registrar_frame(self, m_izq, c_izq, m_der, c_der, ancho_imagen):
+        self.total_frames += 1
+        deteccion_actual_completa = False
+        
+        # 1. PRUEBA DE DETECCIÓN DE AMBAS LÍNEAS (Eq. 42)
+        if m_izq is not None and m_der is not None:
+            self.frames_con_ambas_lineas += 1
+            deteccion_actual_completa = True
+            
+            # 2. PRUEBA DE DISTANCIA (LANE WIDTH) (Eq. 40)
+            # Calculamos x en la base (y_max) para ambas líneas
+            y_base = 720 # Ajustar según el alto de vuestro video
+            x_izq = (y_base - c_izq) / m_izq
+            x_der = (y_base - c_der) / m_der
+            distancia = abs(x_der - x_izq)
+            self.historial_distancias.append(distancia)
+
+        # 3. PRUEBA DE CONSISTENCIA TEMPORAL (Eq. 39)
+        # Verificamos si la pendiente actual no varía bruscamente respecto a la anterior
+        if deteccion_actual_completa and self.ultima_izq and self.ultima_der:
+            cambio_m_izq = abs(m_izq - self.ultima_izq[0]) / abs(self.ultima_izq[0])
+            cambio_m_der = abs(m_der - self.ultima_der[0]) / abs(self.ultima_der[0])
+            
+            if cambio_m_izq < self.umbral_consistencia and cambio_m_der < self.umbral_consistencia:
+                self.frames_consistentes += 1
+        
+        # Actualizamos el último estado conocido
+        if m_izq: self.ultima_izq = (m_izq, c_izq)
+        if m_der: self.ultima_der = (m_der, c_der)
+
+    def obtener_informe(self):
+        # Cálculo de ratios según las fórmulas del artículo
+        tasa_deteccion = (self.frames_con_ambas_lineas / self.total_frames) if self.total_frames > 0 else 0
+        consistencia = (self.frames_consistentes / self.total_frames) if self.total_frames > 0 else 0
+        distancia_media = np.mean(self.historial_distancias) if self.historial_distancias else 0
+        
+        print(f"--- INFORME DE RENDIMIENTO ---")
+        print(f"Total Frames Procesados: {self.total_frames}")
+        print(f"1. Tasa de Detección (Ambas líneas): {tasa_deteccion:.2%}")
+        print(f"2. Consistencia Temporal: {consistencia:.2f} (Ratio estable)")
+        print(f"3. Distancia Media (Lane Width): {distancia_media:.2f} px")
+        return tasa_deteccion, consistencia, distancia_media
+
+INTERPRETACION:
+
+Siguiendo la metodología de Abdelfattah et al. (2025), estas métricas definen si vuestro coche autónomo es seguro o no .
+1. Tasa de Detección (Detection of Both Lines)
+Es la métrica de fiabilidad bruta. Mide el porcentaje de tiempo que el algoritmo es capaz de identificar simultáneamente los dos límites del carril .
+    • Interpretación: Si este valor es bajo, el vehículo está "ciego" ante uno de los lados, lo que impediría calcular su posición central en la calzada.
+    • Referencia del artículo: El modo diurno debe rondar el 0.81 (81%), mientras que en el modo nocturno es aceptable que baje hasta el 0.62 (62%) debido a la oscuridad extrema.
+2. Consistencia Temporal (Stability)
+Mide la suavidad de la detección. Evalúa si las líneas se mantienen estables entre un fotograma y el siguiente o si "vibran" y saltan de posición bruscamente.
+    • Interpretación: Una consistencia baja indica un sistema "nervioso" que podría provocar correcciones de volante erráticas y peligrosas en un coche real.
+    • Referencia del artículo: El artículo reporta un valor de 1.72 para el día (alta estabilidad) frente a un 0.62 para la noche. Aunque la fórmula sugiere un ratio de 0 a 1, el artículo utiliza esta escala para premiar la persistencia de las líneas promediadas .
+3. Distancia Media (Lane Width)
+Es la métrica de precisión geométrica. Utiliza la distancia euclídea para medir el ancho del carril detectado en píxeles. 
+$$Distance = \sqrt{(x_{2}-x_{1})^{2}+(y_{2}-y_{1})^{2}}$$
+    • Interpretación: En vuestro dataset, el ancho de carril debe ser constante. Si esta métrica fluctúa mucho, significa que vuestro ROI es demasiado ancho y estáis detectando líneas de carriles adyacentes por error .
+    • Referencia del artículo: Los valores esperados están entre 271.64 px (día) y 298.64 px (noche).
