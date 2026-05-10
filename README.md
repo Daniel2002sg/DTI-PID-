@@ -27,7 +27,7 @@ Contiene los cuadernos de Jupyter con el desarrollo técnico:
 ### 2. 📄 Document
 Contiene la documentación oficial y material de apoyo:
 
-* `Sistema_adaptativo_de_detección_de_carriles_bajo_condiciones_variables_de_iluminación.pdf`: Articulo científico base.
+* `Sistema_adaptativo_de_detección_de_carriles_bajo_condiciones_variables_de_iluminación.pdf`: Documentacion del estudio.
 * `Presentacion-PID-G9.ppt`: Presentación utilizada para la sustentación del proyecto.
 
 ## 📚 Referencia Bibliográfica
