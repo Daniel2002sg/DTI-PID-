@@ -8,7 +8,7 @@ El proyecto implementa un pipeline de procesamiento de imágenes que utiliza té
 
 Para el desarrollo y validación del sistema se emplearon los siguientes conjuntos de datos:
 
-* **BD TuSimple:** [Enlace a Kaggle](https://www.kaggle.com/datasets/manideep1108/tusimple) - Dataset estándar para detección de carriles en autopistas.
+* **BD TuSimple:** [Enlace a Kaggle](https://www.kaggle.com/datasets/manideep1108/tusimple) - Dataset estándar para detección de carriles en autopistas de día.
 
 * **BD Nocturna:** [Enlace a Google Drive](https://drive.google.com/file/d/1b54L_Ta7zrzN5_M-EcD4u4myCi5wZNoX/view?usp=drive_link) - Dataset específico con condiciones de baja iluminación.
 
@@ -20,15 +20,14 @@ El proyecto se organiza en las siguientes carpetas:
 Contiene los cuadernos de Jupyter con el desarrollo técnico:
 
 * `NooteBook_Pipeline.ipynb`: Implementación del pipeline inicial de procesamiento.
-* `NooteBook_Transformada_Probabilística.ipynb`: Explicación y aplicación de la Transformada de Hough Probabilística.
-* `hough.ipynb`: Notebook explicativo sobre la Transformada de Hough Estándar.
-* `notebook_experimentacion_final.ipynb`: Cuaderno con las pruebas finales y resultados del sistema.
-* `Validación_comparativa.ipynb`: Análisis comparativo de resultados.
+* `Transformada Probabilística.ipynb`: Explicación y aplicación de la Transformada de Hough Probabilística.
+* `Transformada de Hough.ipynb`: Notebook explicativo sobre la Transformada de Hough Estándar.
+* `Validación y experimentacion.ipynb`: Análisis comparativo de resultados y experimentacion con algoritmos.
 
 ### 2. 📄 Document
 Contiene la documentación oficial y material de apoyo:
 
-* `Sistema_adaptativo_de_detección_de_carriles_bajo_condiciones_variables_de_iluminación.pdf`: Memoria completa del trabajo dirigido.
+* `Sistema_adaptativo_de_detección_de_carriles_bajo_condiciones_variables_de_iluminación.pdf`: Articulo científico base.
 * `Presentacion-PID-G9.ppt`: Presentación utilizada para la sustentación del proyecto.
 
 ## 📚 Referencia Bibliográfica
